@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -74,6 +75,42 @@ func normalizeStringsLength(lines []string, maxWidth int) []string {
 	return res
 }
 
+// printFigure prints the cow or stegosaurus figure
+func printFigure(name string) {
+	var cow = `         \  ^__^
+          \ (oo)\_______
+	    (__)\       )\/\
+	        ||----w |
+	        ||     ||
+		`
+
+	var stegosaurus = `         \                      .       .
+          \                    / ` + "`" + `.   .' "
+           \           .---.  <    > <    >  .---.
+            \          |    \  \ - ~ ~ - /  /    |
+          _____           ..-~             ~-..-~
+         |     |   \~~~\\.'                    ` + "`" + `./~~~/
+        ---------   \__/                         \__/
+       .'  O    \     /               /       \  "
+      (_____,    ` + "`" + `._.'               |         }  \/~~~/
+       ` + "`" + `----.          /       }     |        /    \__/
+             ` + "`" + `-.      |       /      |       /      ` + "`" + `. ,~~|
+                 ~-.__|      /_ - ~ ^|      /- _      ` + "`" + `..-'
+                      |     /        |     /     ~-.     ` + "`" + `-. _  _  _
+                      |_____|        |_____|         ~ - . _ _ _ _ _>
+
+	`
+
+	switch name {
+	case "cow":
+		fmt.Println(cow)
+	case "stegosaurus":
+		fmt.Println(stegosaurus)
+	default:
+		fmt.Println("Unknown figure. Please use 'cow' or 'stegosaurus' as the figure name.")
+	}
+}
+
 func main() {
 	info, _ := os.Stdin.Stat()
 
@@ -96,13 +133,10 @@ func main() {
 		output = append(output, string(input))
 	}
 
-	// Cow image
-	var cow = `         \  ^__^
-          \ (oo)\_______
-	    (__)\       )\/\
-	        ||----w |
-	        ||     ||
-		`
+	// Get the figure name
+	var figure string
+	flag.StringVar(&figure, "f", "cow", "The figure to use. Can be 'cow' or 'stegosaurus'")
+	flag.Parse()
 
 	// Format the output
 	output = tabsToSpaces(output)
@@ -110,6 +144,6 @@ func main() {
 	messages := normalizeStringsLength(output, maxWidth)
 	balloon := buildBalloon(messages, maxWidth)
 	fmt.Println(balloon)
-	fmt.Println(cow)
+	printFigure(figure)
 	fmt.Println()
 }
